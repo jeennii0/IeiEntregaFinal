@@ -1,9 +1,7 @@
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.OpenApi.Models;
-using Iei.Wrappers;
+
+using Iei;
 using Iei.Services;
-using Iei.Extractors;
+using Microsoft.EntityFrameworkCore;
 
 public class Program
 {
@@ -11,23 +9,17 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddDbContext<IeiContext>(options =>
-           options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
-
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
 
-        builder.Services.AddScoped<MonumentoService>();
-        builder.Services.AddScoped<CLEService>();
-        builder.Services.AddScoped<CVService>();
-        builder.Services.AddScoped<EUSService>();
+        builder.Services.AddHttpClient();
+        builder.Services.AddScoped<ICargaService, CargaService>();
 
-        builder.Services.AddTransient<CLEExtractor>();
-        builder.Services.AddTransient<CVExtractor>();
-        builder.Services.AddTransient<EUSExtractor>();
 
+        builder.Services.Configure<MicroservicesOptions>(
+    builder.Configuration.GetSection("Microservices"));
 
         var app = builder.Build();
 

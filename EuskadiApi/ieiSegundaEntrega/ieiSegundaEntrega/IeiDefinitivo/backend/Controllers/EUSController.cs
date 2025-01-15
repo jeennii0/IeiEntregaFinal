@@ -5,12 +5,12 @@ using Iei.Models.Dto;
 namespace Iei.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
-    public class CLEController : ControllerBase
+    [Route("api/eus")]
+    public class EusController : ControllerBase
     {
         private readonly IEUSService _service;
 
-        public CLEController(IEUSService service)
+        public EusController(IEUSService service)
         {
             _service = service;
         }

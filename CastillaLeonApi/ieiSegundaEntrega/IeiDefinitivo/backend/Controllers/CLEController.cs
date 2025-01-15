@@ -5,7 +5,7 @@ using Iei.Models.Dto;
 namespace Iei.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("api/castillaleon")]
     public class CLEController : ControllerBase
     {
         private readonly ICLEService _service;
