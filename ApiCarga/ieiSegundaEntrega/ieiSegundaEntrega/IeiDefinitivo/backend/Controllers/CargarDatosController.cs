@@ -12,7 +12,13 @@ public class CargarDatosController : ControllerBase
     {
         _cargaService = cargaService;
     }
-
+    /// <summary>
+    /// Importa datos de las distintas fuentes, según las que se envíen en el parámetro.
+    /// </summary>
+    /// <param name="request">Objeto que indica qué fuentes o comunidades se quieren importar.</param>
+    /// <returns>
+    /// Devuelve un listado de resultados de la carga, o un BadRequest si no se solicitó ninguna comunidad.
+    /// </returns>
     [HttpPost("import")]
     public async Task<IActionResult> ImportData([FromBody] CargaRequest request)
     {
@@ -25,6 +31,10 @@ public class CargarDatosController : ControllerBase
 
         return Ok(resultadoGlobal);
     }
+    /// <summary>
+    /// Borra el almacén de datos (vacía la base de datos).
+    /// </summary>
+    /// <returns>Ok si se vació exitosamente, o un StatusCode(500) si ocurrió un error.</returns>
     [HttpDelete("delete")]
     public async Task<IActionResult> DeleteAllData()
     {
