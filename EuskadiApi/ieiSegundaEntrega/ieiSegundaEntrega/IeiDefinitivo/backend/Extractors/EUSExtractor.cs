@@ -9,7 +9,7 @@ public class EUSExtractor
     public async Task<ResultadoExtraccionDto> ExtractData(List<ModeloJSONOriginal> monumentosJson)
     {
         var resultadoExtraccion = new ResultadoExtraccionDto();
-        var loteDuplicados = new HashSet<(string, double, double)>(); // Detección de duplicados dentro del lote
+        var loteDuplicados = new HashSet<(string,string)>(); // Detección de duplicados dentro del lote
 
         foreach (var fuente in monumentosJson)
         {
@@ -26,7 +26,7 @@ public class EUSExtractor
                 Direccion = fuente.Address ?? "",
                 Latitud = fuente.Latwgs84,
                 Longitud = fuente.Lonwgs84,
-                Tipo =  ConvertirTipoMonumento(fuente.DocumentName)
+                Tipo =  ConvertirTipoMonumento(fuente.DocumentName),
                 Localidad = new Localidad
                 {
                     Nombre = fuente.Municipality ?? "Desconocida",
@@ -52,10 +52,10 @@ public class EUSExtractor
             }
 
             // Duplicados dentro del lote
-            var clave = (nuevoMonumento.Nombre, nuevoMonumento.Latitud, nuevoMonumento.Longitud);
+            var clave = (nuevoMonumento.Nombre, nuevoMonumento.CodigoPostal);
             if (loteDuplicados.Contains(clave))
             {
-                var motivo = "Monumento duplicado en el mismo lote (mismo nombre y coordenadas)";
+                var motivo = "Monumento duplicado en el mismo lote.";
                 resultadoExtraccion.MonumentosRechazados.Add(new MonumentosRechazadosDto
                 {
                     Nombre = nuevoMonumento.Nombre,

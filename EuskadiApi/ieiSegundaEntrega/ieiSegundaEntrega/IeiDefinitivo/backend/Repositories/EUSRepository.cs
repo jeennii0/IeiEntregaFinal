@@ -15,8 +15,7 @@ namespace Iei.Repositories
         {
             return _ieiContext.Monumento.Any(m =>
                 m.Nombre == mon.Nombre &&
-                m.Latitud == mon.Latitud &&
-                m.Longitud == mon.Longitud
+                m.CodigoPostal == mon.CodigoPostal
             );
         }
         public void Add(Monumento monumento)

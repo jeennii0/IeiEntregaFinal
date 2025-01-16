@@ -90,15 +90,11 @@ namespace Iei.Extractors.ValidacionMonumentos
         }
 
         // Verifica si un CP es correcto para una región (prefijos)
-        public static bool EsCodigoPostalCorrectoParaRegion(string codigoPostal, string fuente, List<string> errores)
+        public static bool EsCodigoPostalCorrectoParaRegion(string codigoPostal, List<string> errores)
         {
-            bool esValido = fuente switch
-            {
-                "CV" => codigoPostal.StartsWith("03")
-                     || codigoPostal.StartsWith("12")
-                     || codigoPostal.StartsWith("46"),
+            bool esValido = false;
 
-                "CLE" => codigoPostal.StartsWith("05")
+                if (     codigoPostal.StartsWith("05")
                       || codigoPostal.StartsWith("09")
                       || codigoPostal.StartsWith("24")
                       || codigoPostal.StartsWith("34")
@@ -106,22 +102,16 @@ namespace Iei.Extractors.ValidacionMonumentos
                       || codigoPostal.StartsWith("40")
                       || codigoPostal.StartsWith("42")
                       || codigoPostal.StartsWith("47")
-                      || codigoPostal.StartsWith("49"),
+                      || codigoPostal.StartsWith("49")
+                     ) {  esValido = true; }
 
-                "EUS" => codigoPostal.StartsWith("01")
-                      || codigoPostal.StartsWith("20")
-                      || codigoPostal.StartsWith("48"),
+                    if (!esValido)
+                    {
+                        errores.Add($"El código postal '{codigoPostal}' no corresponde a la región .");
+                    }
 
-                _ => true
-            };
-
-            if (!esValido)
-            {
-                errores.Add($"El código postal '{codigoPostal}' no corresponde a la región '{fuente}'.");
+                return esValido;
             }
-
-            return esValido;
-        }
 
         // Valida las coordenadas geográficas
         public static bool ValidarCoordenadas(double latitud, double longitud, List<string> errores)

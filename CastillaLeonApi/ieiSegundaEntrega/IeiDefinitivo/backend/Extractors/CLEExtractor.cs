@@ -27,6 +27,22 @@ namespace Iei.Extractors
                 var motivos = new List<string>();
                 var correcciones = new List<string>();
                 var errores = new List<string>();
+                var provinciaNormalizada = NormalizarProvincia(fuente.Poblacion?.Provincia);
+
+                if (string.IsNullOrWhiteSpace(provinciaNormalizada))
+                {
+                    errores.Add($"La provincia '{fuente.Poblacion?.Provincia}' no es correcta o no está soportada.");
+                    Rechazar(new Monumento
+                    {
+                        Nombre = fuente.Nombre ?? "Desconocido",
+                        Localidad = new Localidad
+                        {
+                            Nombre = fuente.Poblacion?.Localidad ?? "Desconocida",
+                            Provincia = new Provincia { Nombre = fuente.Poblacion?.Provincia ?? "Desconocida" }
+                        }
+                    }, errores, resultadoExtraccion);
+                    continue;
+                }
 
                 var nuevoMonumento = new Monumento
                 {
@@ -42,7 +58,7 @@ namespace Iei.Extractors
                         Nombre = fuente.Poblacion?.Localidad ?? "Desconocida",
                         Provincia = new Provincia
                         {
-                            Nombre = fuente.Poblacion?.Provincia ?? "Desconocida"
+                            Nombre = NormalizarProvincia(fuente.Poblacion?.Provincia)
                         }
                     }
                 };
@@ -66,16 +82,12 @@ namespace Iei.Extractors
                 }
 
                 bool faltabaDireccion = string.IsNullOrWhiteSpace(nuevoMonumento.Direccion);
-                bool faltabaCP = string.IsNullOrWhiteSpace(nuevoMonumento.CodigoPostal);
                 bool faltabaLocalidad = string.IsNullOrWhiteSpace(nuevoMonumento.Localidad.Nombre);
-                bool faltabaProvincia = string.IsNullOrWhiteSpace(nuevoMonumento.Localidad.Provincia.Nombre);
 
                 if (faltabaDireccion) motivos.Add("Faltaba la dirección");
-                if (faltabaCP) motivos.Add("Faltaba el código postal");
                 if (faltabaLocalidad) motivos.Add("Faltaba la localidad");
-                if (faltabaProvincia) motivos.Add("Faltaba la provincia");
 
-                if (faltabaDireccion || faltabaCP || faltabaLocalidad || faltabaProvincia)
+                if (faltabaDireccion || faltabaLocalidad )
                 {
                     var (address, postcode, province, locality) =
                         await geocodingService.GetGeocodingDetails(
@@ -88,20 +100,10 @@ namespace Iei.Extractors
                         correcciones.Add($"Se completó la dirección con '{address}'");
                         nuevoMonumento.Direccion = address;
                     }
-                    if (faltabaCP && !string.IsNullOrWhiteSpace(postcode))
-                    {
-                        correcciones.Add($"Se completó el código postal con '{postcode}'");
-                        nuevoMonumento.CodigoPostal = postcode;
-                    }
                     if (faltabaLocalidad && !string.IsNullOrWhiteSpace(locality))
                     {
                         correcciones.Add($"Se completó la localidad con '{locality}'");
                         nuevoMonumento.Localidad.Nombre = locality;
-                    }
-                    if (faltabaProvincia && !string.IsNullOrWhiteSpace(province))
-                    {
-                        correcciones.Add($"Se completó la provincia con '{province}'");
-                        nuevoMonumento.Localidad.Provincia.Nombre = province;
                     }
                 }
 
@@ -130,7 +132,6 @@ namespace Iei.Extractors
 
                 if (!ValidacionesMonumentos.EsCodigoPostalCorrectoParaRegion(
                     nuevoMonumento.CodigoPostal,
-                    "CLE",
                     errores))
                 {
                     Rechazar(nuevoMonumento, errores, resultadoExtraccion);
@@ -207,6 +208,26 @@ namespace Iei.Extractors
             }
 
             return "Otros";
+        }
+        private string NormalizarProvincia(string provincia)
+        {
+            var provinciaMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+            {
+                { "Burgos", "Burgos" },
+                { "Segovia", "Segovia" },
+                { "León", "León" },
+                { "Leon", "León" },
+                { "Ávila", "Ávila" },
+                { "Avila", "Ávila" },
+                { "Salamanca", "Salamanca" },
+                { "Zamora", "Zamora" },
+                { "Palencia", "Palencia" },
+                { "Valladolid", "Valladolid" },
+                { "Soria", "Soria" },
+
+            };
+
+            return provinciaMap.ContainsKey(provincia) ? provinciaMap[provincia] : "";
         }
     }
 }

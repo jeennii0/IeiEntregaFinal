@@ -73,7 +73,7 @@
     <telefono>983 680 368</telefono>
     <coordenadas>
       <latitud>41.616554</latitud>
-      <longitud>0</longitud>
+      <longitud></longitud>
     </coordenadas>
     <web>https://www.abadia-retuerta.com/contacta</web>
   </monumento>
@@ -91,7 +91,7 @@
     <horariosYTarifas><![CDATA[<h3>Horario</h3> <ul><li>Mi&eacute;rcoles:  10:00 &ndash; 13:00</li><li>Cerrado: festivos</li></ul>]]></horariosYTarifas>
     <periodoHistorico>Edad Media</periodoHistorico>
     <poblacion>
-      <provincia>Segovia</provincia>
+      <provincia>Segobia</provincia>
       <municipio>Sacramenia</municipio>
       <localidad>Sacramenia</localidad>
     </poblacion>

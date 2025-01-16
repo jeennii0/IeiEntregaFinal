@@ -26,7 +26,7 @@ public class EUSService : IEUSService
         {
             if (_eusRepository.IsDuplicate(monValido))
             {
-                var motivo = "Monumento duplicado en la BD (mismo nombre y coordenadas)";
+                var motivo = "Monumento duplicado en la BD.";
                 resultadoExtraccion.MonumentosRechazados.Add(new MonumentosRechazadosDto
                 {
                     Nombre = monValido.Nombre,
