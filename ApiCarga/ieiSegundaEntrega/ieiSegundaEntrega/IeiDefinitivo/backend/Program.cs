@@ -9,6 +9,17 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        // Agregar configuración de CORS
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy("AllowLocalhost", policy =>
+            {
+                policy.WithOrigins("http://localhost:5173") // URL del frontend
+                      .AllowAnyHeader()
+                      .AllowAnyMethod();
+            });
+        });
+
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
@@ -17,9 +28,8 @@ public class Program
         builder.Services.AddHttpClient();
         builder.Services.AddScoped<ICargaService, CargaService>();
 
-
         builder.Services.Configure<MicroservicesOptions>(
-    builder.Configuration.GetSection("Microservices"));
+            builder.Configuration.GetSection("Microservices"));
 
         var app = builder.Build();
 
@@ -30,13 +40,16 @@ public class Program
             app.UseSwaggerUI();
         }
 
+        // Aplicar CORS antes de UseAuthorization y UseEndpoints
+        app.UseCors("AllowLocalhost");
+
         app.UseHttpsRedirection();
         app.UseAuthorization();
 
         // Habilitamos los controllers
         app.MapControllers();
 
-        // Ejecutamos la aplicaci�n
+        // Ejecutamos la aplicación
         app.Run();
     }
 }
