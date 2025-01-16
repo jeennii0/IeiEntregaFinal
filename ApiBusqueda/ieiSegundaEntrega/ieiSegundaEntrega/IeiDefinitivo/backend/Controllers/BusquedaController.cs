@@ -84,5 +84,36 @@ namespace Iei.Controllers
                 return StatusCode(500, $"Error durante la búsqueda: {ex.Message}");
             }
         }
+
+        [HttpGet("obtenerMonumentos")]
+        public async Task<IActionResult> ObtenerMonumentos()
+        {
+            try
+            {
+                // Obtén todos los monumentos de la base de datos
+                var monumentos = await _context.Monumento
+                    .Select(i => new MonumentosMapaDTO
+                    {
+                        Nombre = i.Nombre,
+                        Tipo = i.Tipo,
+                        Direccion = i.Direccion,
+                        Localidad = i.Localidad.Nombre,
+                        CodigoPostal = i.CodigoPostal,
+                        Provincia = i.Localidad.Provincia.Nombre,
+                        Descripcion = i.Descripcion,
+                        Longitud = i.Longitud, 
+                        Latitud = i.Latitud
+                    })
+                .ToListAsync();
+
+                // Devuelve los datos en la respuesta
+                return Ok(monumentos);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error al obtener los monumentos: {ex.Message}");
+            }
+        }
+
     }
 }
