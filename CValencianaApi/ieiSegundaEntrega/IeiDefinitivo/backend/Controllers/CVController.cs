@@ -5,12 +5,12 @@ using Iei.Models.Dto;
 namespace Iei.Controllers
 {
     [ApiController]
-    [Route("api/comunidadValenciana")]
-    public class CVController : ControllerBase
+    [Route("api/comunidadValenciana/monumentos")]
+    public class ComunidadValencianaController : ControllerBase
     {
         private readonly ICVService _service;
 
-        public CVController(ICVService service)
+        public ComunidadValencianaController(ICVService service)
         {
             _service = service;
         }
@@ -28,7 +28,7 @@ namespace Iei.Controllers
         /// <response code="200">El resumen de la operación con detalles de monumentos procesados.</response>
         /// <response code="500">Error interno durante la importación.</response>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response))]
-        [HttpPost("import")]
+        [HttpPost]
         public async Task<IActionResult> ImportMonumentos()
         {
             try

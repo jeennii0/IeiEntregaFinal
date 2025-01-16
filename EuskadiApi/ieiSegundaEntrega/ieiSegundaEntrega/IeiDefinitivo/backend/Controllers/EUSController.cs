@@ -5,12 +5,12 @@ using Iei.Models.Dto;
 namespace Iei.Controllers
 {
     [ApiController]
-    [Route("api/euskadi")]
-    public class EusController : ControllerBase
+    [Route("api/euskadi/monumentos")]
+    public class EuskadiController : ControllerBase
     {
         private readonly IEUSService _service;
 
-        public EusController(IEUSService service)
+        public EuskadiController(IEUSService service)
         {
             _service = service;
         }
@@ -28,7 +28,7 @@ namespace Iei.Controllers
         /// <response code="200">El resumen de la operación con detalles de monumentos procesados.</response>
         /// <response code="500">Error interno durante la importación.</response>
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response))]
-        [HttpPost("import")]
+        [HttpPost]
         public async Task<IActionResult> ImportMonumentos()
         {
             try

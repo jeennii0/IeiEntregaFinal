@@ -13,7 +13,7 @@ using System.Text;
 
 namespace Iei.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/monumentos")]
     [ApiController]
     public class BusquedaController : ControllerBase
     {
@@ -29,7 +29,7 @@ namespace Iei.Controllers
         /// </summary>
         /// <param name="request">Objeto que indica en base a qué parámetros buscamos el monumento.</param>
 
-        [HttpGet("buscarMonumentos")]
+        [HttpGet("buscar")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusquedaResponse))]
         public async Task<IActionResult> BuscarMonumentos(
             [FromQuery] string? Localidad,
@@ -93,7 +93,7 @@ namespace Iei.Controllers
         /// Devuelve todos los monumentos que hay en la base de datos.
         /// </summary>
         
-        [HttpGet("obtenerMonumentos")]
+        [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MonumentosMapaResponse))]
         public async Task<IActionResult> ObtenerMonumentos()
         {

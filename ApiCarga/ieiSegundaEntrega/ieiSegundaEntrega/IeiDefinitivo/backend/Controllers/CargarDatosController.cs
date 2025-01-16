@@ -3,7 +3,7 @@ using Iei.Models;
 using Iei.Services;
 
 [ApiController]
-[Route("api/[controller]")]
+[Route("api/carga")]
 public class CargarDatosController : ControllerBase
 {
     private readonly ICargaService _cargaService;
@@ -19,7 +19,7 @@ public class CargarDatosController : ControllerBase
     /// <returns>
     /// Devuelve un listado de resultados de la carga, o un BadRequest si no se solicitó ninguna comunidad.
     /// </returns>
-    [HttpPost("import")]
+    [HttpPost]
     [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultadoMicroservicio))]
     public async Task<IActionResult> ImportData([FromBody] CargaRequest request)
     {
@@ -36,7 +36,7 @@ public class CargarDatosController : ControllerBase
     /// Borra el almacén de datos (vacía la base de datos).
     /// </summary>
     /// <returns>Ok si se vació exitosamente, o un StatusCode(500) si ocurrió un error.</returns>
-    [HttpDelete("delete")]
+    [HttpDelete]
     public async Task<IActionResult> DeleteAllData()
     {
         try
