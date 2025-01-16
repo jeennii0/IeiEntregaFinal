@@ -18,7 +18,20 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "API de la Comunidad Valenciana",
+                Version = "v1",
+                Description = "Esta es la documentación de la API de la Comunidad Valenciana"
+            });
+
+            var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
+
+        });
 
         builder.Services.AddScoped<CVWrapper>();
         builder.Services.AddScoped<CVExtractor>();
@@ -30,13 +43,16 @@ public class Program
 
         var app = builder.Build();
 
+
         // Si estamos en desarrollo, habilitamos Swagger
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mi API de Euskadi v1");
+            });
         }
-
         app.UseHttpsRedirection();
         app.UseAuthorization();
 

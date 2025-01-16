@@ -40,10 +40,6 @@ public class Program
             var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
             options.IncludeXmlComments(xmlPath);
 
-
-
-
-
         });
 
 
@@ -61,7 +57,7 @@ public class Program
             app.UseSwagger();
             app.UseSwaggerUI(c =>
             {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mi API IEI v1");
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mi API de Carga v1");
             });
         }
 

@@ -24,8 +24,13 @@ namespace Iei.Controllers
         {
             _context = context;
         }
+        /// <summary>
+        /// Busca los monumentos insertados en la base de datos según lo que se envíe por parámetro.
+        /// </summary>
+        /// <param name="request">Objeto que indica en base a qué parámetros buscamos el monumento.</param>
 
         [HttpGet("buscarMonumentos")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BusquedaResponse))]
         public async Task<IActionResult> BuscarMonumentos(
             [FromQuery] string? Localidad,
             [FromQuery] string? CodigoPostal,
@@ -84,8 +89,12 @@ namespace Iei.Controllers
                 return StatusCode(500, $"Error durante la búsqueda: {ex.Message}");
             }
         }
-
+        /// <summary>
+        /// Devuelve todos los monumentos que hay en la base de datos.
+        /// </summary>
+        
         [HttpGet("obtenerMonumentos")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(MonumentosMapaResponse))]
         public async Task<IActionResult> ObtenerMonumentos()
         {
             try

@@ -30,7 +30,20 @@ public class Program
 
         // Configuración de Swagger
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "API de Búsqueda",
+                Version = "v1",
+                Description = "Esta es la documentación de la API de Búsqueda"
+            });
+
+            var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
+
+        });
 
         // Servicios inyectados
         builder.Services.AddScoped<MonumentoService>();
@@ -48,7 +61,10 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mi API de Búsqueda v1");
+            });
         }
 
         // Habilitar CORS

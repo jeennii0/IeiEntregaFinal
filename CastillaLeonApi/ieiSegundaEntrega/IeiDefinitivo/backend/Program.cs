@@ -3,6 +3,7 @@ using Iei.Wrappers;
 using Iei.Services;
 using Iei.Extractors;
 using Iei.Repositories;
+using Microsoft.OpenApi.Models;
 
 public class Program
 {
@@ -16,7 +17,20 @@ public class Program
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();
-        builder.Services.AddSwaggerGen();
+        builder.Services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc("v1", new OpenApiInfo
+            {
+                Title = "API de Castilla y León",
+                Version = "v1",
+                Description = "Esta es la documentación de la API de Castilla y Léón"
+            });
+
+            var xmlFile = $"{System.Reflection.Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
+
+        });
 
         builder.Services.AddScoped<ICLERepository, CLERepository>();
 
@@ -36,7 +50,10 @@ public class Program
         if (app.Environment.IsDevelopment())
         {
             app.UseSwagger();
-            app.UseSwaggerUI();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Mi API de Castilla y León v1");
+            });
         }
 
         app.UseHttpsRedirection();

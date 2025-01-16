@@ -20,6 +20,7 @@ public class CargarDatosController : ControllerBase
     /// Devuelve un listado de resultados de la carga, o un BadRequest si no se solicitó ninguna comunidad.
     /// </returns>
     [HttpPost("import")]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ResultadoMicroservicio))]
     public async Task<IActionResult> ImportData([FromBody] CargaRequest request)
     {
         var resultadoGlobal = await _cargaService.ImportDataAsync(request);
