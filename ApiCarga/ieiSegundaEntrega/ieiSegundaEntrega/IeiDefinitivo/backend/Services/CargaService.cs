@@ -8,13 +8,16 @@ namespace Iei.Services
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly MicroservicesOptions _microservicesOptions;
+        private readonly IeiContext _ieiContext;
 
         public CargaService(
             IHttpClientFactory httpClientFactory,
-            IOptions<MicroservicesOptions> microservicesOptions)
+            IOptions<MicroservicesOptions> microservicesOptions,
+            IeiContext ieiContext)
         {
             _httpClientFactory = httpClientFactory;
             _microservicesOptions = microservicesOptions.Value;
+            _ieiContext = ieiContext;
         }
 
         public async Task<Dictionary<string, object>> ImportDataAsync(CargaRequest cargaRequest)
@@ -91,13 +94,33 @@ namespace Iei.Services
 
             return new { resultado.NumeroMonumentosInsertados };
         }
-    }
 
-    // Clase para deserializar la respuesta de cada microservicio
-    public class ResultadoMicroservicio
-    {
-        public int NumeroMonumentosInsertados { get; set; }
-        public List<MonumentosReparadosDto> MonumentoReparado { get; set; }
-        public List<MonumentosRechazadosDto> MonumentoDescartado { get; set; }
+        public async Task VaciarBaseDeDatosAsync()
+        {
+            // Asume que tienes un contexto para interactuar con la base de datos.
+            using (var scope = _ieiContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    // Eliminar los datos de las tablas principales.
+                    _ieiContext.Monumento.RemoveRange(_ieiContext.Monumento);
+                    _ieiContext.Provincia.RemoveRange(_ieiContext.Provincia);
+                    _ieiContext.Localidad.RemoveRange(_ieiContext.Localidad);
+
+                    // Guardar cambios.
+                    await _ieiContext.SaveChangesAsync();
+
+                    // Confirmar la transacción.
+                    scope.Commit();
+                }
+                catch (Exception)
+                {
+                    // Revertir la transacción en caso de error.
+                    scope.Rollback();
+                    throw;
+                }
+            }
+        }
+
     }
 }

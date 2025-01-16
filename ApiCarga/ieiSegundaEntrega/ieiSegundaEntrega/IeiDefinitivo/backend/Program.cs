@@ -9,6 +9,9 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        builder.Services.AddDbContext<IeiContext>(options =>
+           options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection")));
+
         builder.Services.AddControllers();
 
         builder.Services.AddEndpointsApiExplorer();

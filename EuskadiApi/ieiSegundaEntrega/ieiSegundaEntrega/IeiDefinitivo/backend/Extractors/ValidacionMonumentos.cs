@@ -41,12 +41,6 @@ namespace Iei.Extractors.ValidacionMonumentos
                 return false;
             }
 
-            if (string.IsNullOrWhiteSpace(direccion))
-            {
-                errores.Add($"Se descarta el monumento '{nombre}': la dirección está vacía.");
-                return false;
-            }
-
             if (string.IsNullOrWhiteSpace(localidad))
             {
                 errores.Add($"Se descarta el monumento '{nombre}': la localidad está vacía.");

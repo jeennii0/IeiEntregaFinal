@@ -25,4 +25,19 @@ public class CargarDatosController : ControllerBase
 
         return Ok(resultadoGlobal);
     }
+    [HttpDelete("delete")]
+    public async Task<IActionResult> DeleteAllData()
+    {
+        try
+        {
+            await _cargaService.VaciarBaseDeDatosAsync();
+            return Ok("Base de datos vaciada exitosamente.");
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(500, $"Error al vaciar la base de datos: {ex.Message}");
+        }
+    }
+
+
 }
