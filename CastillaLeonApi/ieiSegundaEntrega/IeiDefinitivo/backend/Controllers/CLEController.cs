@@ -6,12 +6,12 @@ using Iei.Models.Respuesta;
 namespace Iei.Controllers
 {
     [ApiController]
-    [Route("api/castillaLeon")]
-    public class CLEController : ControllerBase
+    [Route("api/castillaLeon/monumentos")]
+    public class CastillaLeonController : ControllerBase
     {
         private readonly ICLEService _service;
 
-        public CLEController(ICLEService service)
+        public CastillaLeonController(ICLEService service)
         {
             _service = service;
         }
@@ -30,7 +30,7 @@ namespace Iei.Controllers
         /// <response code="500">Error interno durante la importación.</response>
 
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Response))]
-        [HttpPost("import")]
+        [HttpPost]
         public async Task<IActionResult> ImportMonumentos()
         {
             try
