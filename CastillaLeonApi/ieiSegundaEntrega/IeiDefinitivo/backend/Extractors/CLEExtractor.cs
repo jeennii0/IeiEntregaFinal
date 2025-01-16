@@ -178,12 +178,35 @@ namespace Iei.Extractors
             return textoLimpio.Trim();
         }
 
-        private string ConvertirTipoMonumento(string tipoOriginal)
+        public string ConvertirTipoMonumento(string tipoMonumento)
         {
-            if (string.IsNullOrEmpty(tipoOriginal))
-                return "Otros";
+            var tipoMonumentoMap = new Dictionary<string, string>
+            {
+                { "Yacimientos arqueológico", "Yacimiento arqueológico" },
+                { "Casa", "Edificio singular" },
+                { "Casas Nobles", "Edificio singular" },
+                { "Ermitas", "Iglesia-Ermita" },
+                { "Iglesias", "Iglesia-Ermita" },
+                { "Catedral", "Monasterio-Convento" },
+                { "Torre", "Castillo-Fortaleza-Torre" },
+                { "Muralla", "Castillo-Fortaleza-Torre" },
+                { "Castillos", "Castillo-Fortaleza-Torre" },
+                { "Puerta", "Castillo-Fortaleza-Torre" },
+                { "Palacios", "Edificio singular" },
+                { "Puentes", "Puente" },
+                { "Santuario", "Monasterio-Convento" },
+                { "Monasterios", "Monasterio-Convento" }
+            };
 
-            return tipoOriginal;
+            foreach (var key in tipoMonumentoMap.Keys)
+            {
+                if (!string.IsNullOrEmpty(tipoMonumento) && tipoMonumento.Contains(key, StringComparison.OrdinalIgnoreCase))
+                {
+                    return tipoMonumentoMap[key];
+                }
+            }
+
+            return "Otros";
         }
     }
 }

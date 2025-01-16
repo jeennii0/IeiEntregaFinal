@@ -26,7 +26,7 @@ public class EUSExtractor
                 Direccion = fuente.Address ?? "",
                 Latitud = fuente.Latwgs84,
                 Longitud = fuente.Lonwgs84,
-                Tipo = "Patrimonio cultural", // Usamos templateType como Tipo en este caso
+                Tipo =  ConvertirTipoMonumento(fuente.DocumentName)
                 Localidad = new Localidad
                 {
                     Nombre = fuente.Municipality ?? "Desconocida",
@@ -115,6 +115,38 @@ public class EUSExtractor
             MotivoError = motivo
         });
     }
+     public string ConvertirTipoMonumento(string tipoMonumento)
+        {
+            var tipoMonumentoMap = new Dictionary<string, string>
+            {
+                { "Castillo", "Castillo-Fortaleza-Torre" },
+                { "Ermita", "Iglesia-Ermita" },
+                { "Monasterio", "Monasterio-Convento" },
+                { "Torre", "Castillo-Fortaleza-Torre" },
+                { "Palacio", "Edificio singular" },
+                { "Catedral", "Iglesia-Ermita" },
+                { "Puente", "Puente" },
+                { "Iglesia", "Iglesia-Ermita" },
+                { "Basílica", "Iglesia-Ermita" },
+                { "Ayuntamiento", "Edificio singular" },
+                { "Casa-Torre", "Castillo-Fortaleza-Torre" },
+                { "Convento", "Monasterio-Convento" },
+                { "Muralla", "Castillo-Fortaleza-Torre" },
+                { "Parroquia", "Iglesia-Ermita" },
+                { "Santuario", "Iglesia-Ermita" },
+                { "Teatro", "Edificio singular" },
+                { "Torre-Palacio", "Castillo-Fortaleza-Torre" },
+            };
+
+            foreach (var key in tipoMonumentoMap.Keys)
+            {
+                if (!string.IsNullOrEmpty(tipoMonumento) && tipoMonumento.Contains(key, StringComparison.OrdinalIgnoreCase))
+                {
+                    return tipoMonumentoMap[key];
+                }
+            }
+            return "Otros";
+        }
 
     private string ProcesarDescripcion(string descripcionHtml)
     {

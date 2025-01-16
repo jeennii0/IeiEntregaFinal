@@ -191,15 +191,27 @@ namespace Iei.Extractors
             });
         }
 
-        private string ConvertirTipoMonumento(string tipo)
+        public string ConvertirTipoMonumento(string tipoMonumento)
         {
-            var tipoMap = new Dictionary<string, string>
+            var tipoMonumentoMap = new Dictionary<string, string>
             {
                 { "Zona arqueológica", "Yacimiento arqueológico" },
                 { "Monumento", "Edificio singular" },
-                { "Otros", "Otros" }
+                { "Individual (mueble)", "Edificio singular" },
+                { "Conjunto histórico", "Edificio singular" },
+                { "Fondo de museo (primera)", "Otros" },
+                { "Zona paleontológica", "Yacimiento arqueológico" },
+                { "Archivo", "Otros" },
+                { "Espacio etnológico", "Otros" },
+                { "Sitio histórico", "Edificio singular" },
+                { "Jardín histórico", "Edificio singular" },
+                { "Parque cultural", "Otros" },
+                { "Monumento de interés local", "Edificio singular" }
             };
-            return tipoMap.ContainsKey(tipo) ? tipoMap[tipo] : "Otros";
+
+            return tipoMonumentoMap.ContainsKey(tipoMonumento)
+                ? tipoMonumentoMap[tipoMonumento]
+                : "Otros";
         }
 
         private string NormalizarProvincia(string provincia)

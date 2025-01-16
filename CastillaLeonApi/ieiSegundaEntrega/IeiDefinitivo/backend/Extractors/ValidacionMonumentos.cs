@@ -126,9 +126,16 @@ namespace Iei.Extractors.ValidacionMonumentos
         // Valida las coordenadas geográficas
         public static bool ValidarCoordenadas(double latitud, double longitud, List<string> errores)
         {
+
             if (latitud < -90 || latitud > 90)
             {
                 errores.Add($"La latitud '{latitud}' está fuera del rango -90..90.");
+                return false;
+            }
+
+            if (latitud ==0 || longitud == 0)
+            {
+                errores.Add($"La latitud o la longitud son 0");
                 return false;
             }
 
