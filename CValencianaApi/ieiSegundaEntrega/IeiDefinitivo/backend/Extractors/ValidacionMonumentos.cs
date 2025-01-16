@@ -73,7 +73,7 @@ namespace Iei.Extractors.ValidacionMonumentos
         {
             if (string.IsNullOrWhiteSpace(codigoPostal))
             {
-                errores.Add("El código postal está vacío o solo contiene espacios en blanco.");
+                errores.Add("La API de Geocodificación no ha podido obtener el código postal.");
                 return false;
             }
 
@@ -84,29 +84,12 @@ namespace Iei.Extractors.ValidacionMonumentos
                 errores.Add($"El código postal '{codigoPostal}' no tiene un formato válido.");
                 return false;
             }
-
-            return true;
-        }
-
-        // Verifica si un código postal es correcto para una región específica
-        public static bool EsCodigoPostalCorrectoParaRegion(string codigoPostal, string fuente, List<string> errores)
-        {
-            bool esValido = fuente switch
-            {
-                "CV" => codigoPostal.StartsWith("03") || codigoPostal.StartsWith("12") || codigoPostal.StartsWith("46"),
-                "CLE" => codigoPostal.StartsWith("05") || codigoPostal.StartsWith("09") || codigoPostal.StartsWith("24") ||
-                         codigoPostal.StartsWith("34") || codigoPostal.StartsWith("37") || codigoPostal.StartsWith("40") ||
-                         codigoPostal.StartsWith("42") || codigoPostal.StartsWith("47") || codigoPostal.StartsWith("49"),
-                "EUS" => codigoPostal.StartsWith("01") || codigoPostal.StartsWith("20") || codigoPostal.StartsWith("48"),
-                _ => true
-            };
-
-            if (!esValido)
-            {
-                errores.Add($"El código postal '{codigoPostal}' no es válido para la región '{fuente}'.");
+            if(!(codigoPostal.StartsWith("03") || codigoPostal.StartsWith("12") || codigoPostal.StartsWith("46"))){
+                errores.Add($"El código postal '{codigoPostal}' no es válido para la región.");
+                return false;
             }
 
-            return esValido;
+            return true;
         }
 
         // Valida las coordenadas UTM del monumento

@@ -29,6 +29,22 @@ namespace Iei.Extractors
                 var motivos = new List<string>();
                 var correcciones = new List<string>();
                 var errores = new List<string>();
+                var provinciaNormalizada = NormalizarProvincia(fuente.Provincia);
+                if (string.IsNullOrWhiteSpace(provinciaNormalizada))
+                {
+                    errores.Add($"La provincia '{fuente.Provincia}' no es correcta o no está soportada.");
+                    Rechazar(new Monumento
+                    {
+                        Nombre = fuente.Denominacion ?? "Desconocido",
+                        Localidad = new Localidad
+                        {
+                            Nombre = fuente.Municipio,
+                            Provincia = new Provincia { Nombre = fuente.Provincia }
+                        }
+                    }, errores, resultadoExtraccion);
+                    continue;
+                }
+
 
                 // Crear el objeto Monumento
                 var nuevoMonumento = new Monumento
@@ -52,7 +68,6 @@ namespace Iei.Extractors
                     Rechazar(nuevoMonumento, errores, resultadoExtraccion);
                     continue;
                 }
-
                 // Validar coordenadas UTM
                 if (!await AsignarCoordenadasAsync(nuevoMonumento, fuente, convertidor, motivos, errores))
                 {
@@ -81,13 +96,12 @@ namespace Iei.Extractors
                     Rechazar(nuevoMonumento, errores, resultadoExtraccion);
                     continue;
                 }
-
-                // Validar si el código postal pertenece a la Comunidad Valenciana
-                if (!ValidacionesMonumentos.EsCodigoPostalCorrectoParaRegion(nuevoMonumento.CodigoPostal, "CV", errores))
+                if (!ValidacionesMonumentos.EsCodigoPostalValido(nuevoMonumento.CodigoPostal, errores))
                 {
                     Rechazar(nuevoMonumento, errores, resultadoExtraccion);
                     continue;
                 }
+
 
                 // Si hubo reparaciones, añadir a la lista de reparados
                 if (motivos.Count > 0 || correcciones.Count > 0)
@@ -219,7 +233,9 @@ namespace Iei.Extractors
             var provinciaMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
             {
                 { "Alicante", "Alicante" },
+                { "Castellon", "Castellón" },
                 { "Castellón", "Castellón" },
+                { "València", "Valencia" },
                 { "Valencia", "Valencia" }
             };
             return provinciaMap.ContainsKey(provincia) ? provinciaMap[provincia] : "";
