@@ -29,6 +29,13 @@ namespace Iei.Services
      
             foreach (var monValido in resultadoExtraccion.MonumentosValidados)
             {
+                var provincia = _cleRepository.GetOrCreateProvincia(monValido.Localidad.Provincia.Nombre);
+
+                // Verificar o crear la localidad asociada a la provincia
+                var localidad = _cleRepository.GetOrCreateLocalidad(monValido.Localidad.Nombre, provincia);
+
+                // Asociar la localidad al monumento
+                monValido.Localidad = localidad;
                 var clave = (monValido.Nombre, monValido.Latitud, monValido.Longitud);
 
                 if (loteDuplicados.Contains(clave))

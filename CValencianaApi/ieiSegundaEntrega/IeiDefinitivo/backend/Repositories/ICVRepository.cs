@@ -9,5 +9,7 @@ namespace Iei.Repositories
         bool IsDuplicate(Monumento mon);
         Task<Monumento> GetByIdAsync(int id);
         Task<int> SaveChangesAsync();
+        Localidad GetOrCreateLocalidad(string nombre, Provincia provincia);
+        Provincia GetOrCreateProvincia(string nombre);
     }
 }

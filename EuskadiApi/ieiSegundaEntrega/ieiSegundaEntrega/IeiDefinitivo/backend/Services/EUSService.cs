@@ -22,8 +22,19 @@ public class EUSService : IEUSService
         var resultadoExtraccion = await _extractor.ExtractData(monumentosJson);
 
         var listaNoDuplicados = new List<Monumento>();
+
         foreach (var monValido in resultadoExtraccion.MonumentosValidados)
         {
+            // Verificar o crear la provincia
+            var provincia = _eusRepository.GetOrCreateProvincia(monValido.Localidad.Provincia.Nombre);
+
+            // Verificar o crear la localidad asociada a la provincia
+            var localidad = _eusRepository.GetOrCreateLocalidad(monValido.Localidad.Nombre, provincia);
+
+            // Asociar la localidad al monumento
+            monValido.Localidad = localidad;
+
+            // Verificar si el monumento ya existe
             if (_eusRepository.IsDuplicate(monValido))
             {
                 var motivo = "Monumento duplicado en la BD.";
@@ -40,6 +51,7 @@ public class EUSService : IEUSService
             }
         }
 
+        // Insertar los monumentos no duplicados en la BD
         if (listaNoDuplicados.Any())
         {
             foreach (var mon in listaNoDuplicados)
@@ -51,4 +63,6 @@ public class EUSService : IEUSService
         resultadoExtraccion.MonumentosInsertados = listaNoDuplicados.Count;
         return resultadoExtraccion;
     }
+
+
 }

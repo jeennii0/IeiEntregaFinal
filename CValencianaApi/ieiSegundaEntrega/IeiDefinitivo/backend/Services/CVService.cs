@@ -32,6 +32,13 @@ namespace Iei.Services
 
             foreach (var monValido in resultadoExtraccion.MonumentosValidados)
             {
+                var provincia = _cvRepository.GetOrCreateProvincia(monValido.Localidad.Provincia.Nombre);
+
+                // Verificar o crear la localidad asociada a la provincia
+                var localidad = _cvRepository.GetOrCreateLocalidad(monValido.Localidad.Nombre, provincia);
+
+                // Asociar la localidad al monumento
+                monValido.Localidad = localidad;
                 if (_cvRepository.IsDuplicate(monValido))
                 {
                     var motivo = "Monumento duplicado en la base de datos (mismo nombre y coordenadas)";

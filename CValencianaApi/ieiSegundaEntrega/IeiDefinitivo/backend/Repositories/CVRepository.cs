@@ -39,5 +39,35 @@ namespace Iei.Repositories
         {
             return await _ieiContext.SaveChangesAsync();
         }
+        public Provincia GetOrCreateProvincia(string nombre)
+        {
+            var provincia = _ieiContext.Provincia
+            .FirstOrDefault(p => p.Nombre.ToLower() == nombre.ToLower());
+
+            if (provincia == null)
+            {
+                provincia = new Provincia { Nombre = nombre };
+                _ieiContext.Provincia.Add(provincia);
+                _ieiContext.SaveChanges(); // Guardar cambios para obtener el ID
+            }
+
+            return provincia;
+        }
+        public Localidad GetOrCreateLocalidad(string nombre, Provincia provincia)
+        {
+            var localidad = _ieiContext.Localidad
+        .FirstOrDefault(l =>
+            l.Nombre.ToLower() == nombre.ToLower() &&
+            l.ProvinciaId == provincia.Id);
+            if (localidad == null)
+            {
+                localidad = new Localidad { Nombre = nombre, Provincia = provincia };
+                _ieiContext.Localidad.Add(localidad);
+                _ieiContext.SaveChanges(); // Guardar cambios para obtener el ID
+            }
+
+            return localidad;
+        }
+
     }
 }
