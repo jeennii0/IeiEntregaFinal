@@ -16,7 +16,7 @@ namespace Iei.Controllers
             _service = service;
         }
         /// <summary>
-        /// Inserta los monumentos de Castilla y León en la base de datos.
+        /// Inserta los datos de los monumentos de Castilla y León.
         /// </summary>
         /// <remarks>
         /// Este método procesa una lista de monumentos, insertando los válidos en la base de datos.

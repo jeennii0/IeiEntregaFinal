@@ -15,7 +15,7 @@ namespace Iei.Controllers
             _service = service;
         }
         /// <summary>
-        /// Inserta los monumentos de Euskadi en la base de datos.
+        /// Inserta los datos de los monumentos de Euskadi.
         /// </summary>
         /// <remarks>
         /// Este método procesa una lista de monumentos, insertando los válidos en la base de datos.

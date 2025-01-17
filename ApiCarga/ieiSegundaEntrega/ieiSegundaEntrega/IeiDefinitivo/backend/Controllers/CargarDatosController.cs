@@ -13,7 +13,7 @@ public class CargarDatosController : ControllerBase
         _cargaService = cargaService;
     }
     /// <summary>
-    /// Importa datos de las distintas fuentes, según las que se envíen en el parámetro.
+    /// Importa datos de los monumentos de las distintas fuentes, según las que se envíen en el parámetro.
     /// </summary>
     /// <param name="request">Objeto que indica qué fuentes o comunidades se quieren importar.</param>
     /// <returns>
